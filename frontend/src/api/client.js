@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://overventurously-nondenunciating-kody.ngrok-free.dev';
+const BASE_URL = 'https://shopify-brand-verify-production.up.railway.app';
 
 // Get shop domain from URL query param (Shopify always appends ?shop=)
 const shopDomain =
