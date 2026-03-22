@@ -26,7 +26,7 @@ function ItemsCell({ items }) {
   );
 }
 
-function QRCell({ orderId }) {
+function QRCell({ orderId, shopDomain }) {
   const [qrData, setQrData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -47,7 +47,23 @@ function QRCell({ orderId }) {
 
   useEffect(() => { loadQR(); }, []);
 
-  const downloadUrl = `${BASE_URL}/orders/${orderId}/qr/image`;
+  async function handleDownload() {
+    try {
+      const res = await api.get(`/orders/${orderId}/qr/image`, {
+        responseType: 'blob'
+      });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `qr-${orderId}.png`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      alert('Failed to download QR code.');
+    }
+  }
 
   if (loading) return <Spinner size="small" />;
   if (!qrData) return <Button size="slim" onClick={loadQR}>Load QR</Button>;
@@ -61,9 +77,7 @@ function QRCell({ orderId }) {
         alt="Order QR Code"
         style={{ borderRadius: '4px', border: '1px solid #e1e3e5' }}
       />
-      <a href={downloadUrl} download={`qr-${orderId}.png`} target="_blank" rel="noreferrer">
-        <Button size="slim">⬇ Download</Button>
-      </a>
+      <Button size="slim" onClick={handleDownload}>⬇ Download</Button>
     </InlineStack>
   );
 }
