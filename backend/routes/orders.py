@@ -1,3 +1,4 @@
+from config import settings
 from fastapi import APIRouter, Depends, HTTPException, Path
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
@@ -43,7 +44,7 @@ async def get_my_orders(
                 "items":          o.line_items,
                 "shipping_to":    o.shipping_address,
                 "qr_hash":        o.qr_hash,
-                "verify_url": f"https://shopify-brand-verify-vercel.vercel.app/verify/{o.qr_hash}",
+                "verify_url": f"{settings.SHOPIFY_APP_URL}/verify/{o.qr_hash}",
                 "created_at":     str(o.created_at),
             }
             for o in orders
@@ -74,7 +75,7 @@ async def get_qr_image(
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    verify_url = f"https://shopify-brand-verify-vercel.vercel.app/verify/{o.qr_hash}"
+    verify_url = f"{settings.SHOPIFY_APP_URL}/verify/{o.qr_hash}"
     png_bytes  = generate_qr_image(verify_url)
 
     return Response(
@@ -107,7 +108,7 @@ async def get_qr_base64(
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    verify_url = f"https://shopify-brand-verify-vercel.vercel.app/verify/{o.qr_hash}"
+    verify_url = f"{settings.SHOPIFY_APP_URL}/verify/{o.qr_hash}"
     b64         = generate_qr_base64(verify_url)
 
     return {
