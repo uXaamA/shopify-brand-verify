@@ -6,7 +6,7 @@ import {
 } from '@shopify/polaris';
 import api from '../api/client';
 
-const BASE_URL = 'https://overventurously-nondenunciating-kody.ngrok-free.dev';
+const BASE_URL = 'https://shopify-brand-verify-production.up.railway.app';
 
 function formatDate(dateStr) {
   if (!dateStr) return '—';
