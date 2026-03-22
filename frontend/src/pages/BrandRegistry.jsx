@@ -116,9 +116,10 @@ export default function BrandRegistry() {
   }
 
   function handleClaimOwnership() {
+    const brandName = conflictData?.conflicting_brand || '';
     const brandId = conflictData?.conflicting_brand_id || '';
-    navigate(`/claims/new?brand_id=${brandId}&brand_name=${encodeURIComponent(conflictData?.conflicting_brand || '')}`);
-  }
+    navigate(`/claims/new?brand_id=${brandId}&brand_name=${encodeURIComponent(brandName)}`);
+}
 
   // Suffix for the text field
   let suffix = null;
@@ -164,7 +165,7 @@ export default function BrandRegistry() {
               <Banner tone="warning">
                 <BlockStack gap="200">
                   <Text>{checkMessage}</Text>
-                  {conflictData?.can_claim && (
+                  {checkStatus === 'conflict' && (
                     <Button onClick={handleClaimOwnership} variant="plain">
                       Claim Official Ownership →
                     </Button>
